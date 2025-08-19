@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  frontend:
+    container_name: react-frontend
+    build: .
+    ports:
+      - "3000:80"
+    networks:
+      - ai-challenge-network # <<< Tham gia vào network đã tạo bởi backend
+    restart: unless-stopped
+
+networks:
+  ai-challenge-network:
+    external: true # <<< Đánh dấu rằng network này là từ bên ngoài, không phải do file này tạo ra
