@@ -9,7 +9,6 @@ const ImageSearch = document.getElementById("ImageSearch");
 const searchBtn = document.getElementById("searchBtn");
 const answers = document.getElementById("answers");
 
-// Gom vào 1 hàm chung để switch
 function switchSearchMode(mode) {
   // Ẩn tất cả panel
   TextSearch.classList.add("hidden");
@@ -45,18 +44,6 @@ ImageBtn.addEventListener("click", () => switchSearchMode("image"));
 
 // Mặc định mở TextSearch
 switchSearchMode("text");
-
-// demo search: lấy nội dung và hiển thị
-searchBtn.addEventListener("click", () => {
-  let query = "";
-  if (!TextSearch.classList.contains("hidden")) {
-    query = document.getElementById("queryBasic").value;
-  } else {
-    query = document.getElementById("queryTemporal").value;
-  }
-
-  answers.innerHTML = `<div class="bg-white p-2 rounded shadow">🔎 You searched: <b>${query}</b></div>`;
-});
 
 // slider
 const kRange = document.getElementById("kRange");
