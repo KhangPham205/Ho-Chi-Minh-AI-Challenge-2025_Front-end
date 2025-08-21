@@ -9,6 +9,8 @@ const ImageSearch = document.getElementById("ImageSearch");
 const searchBtn = document.getElementById("searchBtn");
 const answers = document.getElementById("answers");
 
+const translateBtn = document.getElementById("translateBtn"); // 👈 thêm dòng này
+
 function switchSearchMode(mode) {
   // Ẩn tất cả panel
   TextSearch.classList.add("hidden");
@@ -26,14 +28,17 @@ function switchSearchMode(mode) {
     TextSearch.classList.remove("hidden");
     TextBtn.classList.add("bg-[#E5BEB5]", "text-white");
     TextBtn.classList.remove("bg-gray-300");
+    translateBtn.classList.remove("hidden"); // 👈 hiện Translate
   } else if (mode === "temporal") {
     TemporalSearch.classList.remove("hidden");
     TemporalBtn.classList.add("bg-[#E5BEB5]", "text-white");
     TemporalBtn.classList.remove("bg-gray-300");
+    translateBtn.classList.remove("hidden"); // 👈 hiện Translate
   } else if (mode === "image") {
     ImageSearch.classList.remove("hidden");
     ImageBtn.classList.add("bg-[#E5BEB5]", "text-white");
     ImageBtn.classList.remove("bg-gray-300");
+    translateBtn.classList.add("hidden"); // 👈 ẩn Translate
   }
 }
 
@@ -47,8 +52,8 @@ switchSearchMode("text");
 
 // slider
 const kRange = document.getElementById("kRange");
-  const kValue = document.getElementById("kValue");
+const kValue = document.getElementById("kValue");
 
-  kRange.addEventListener("input", () => {
-    kValue.textContent = kRange.value;
-  });
+kRange.addEventListener("input", () => {
+  kValue.textContent = kRange.value;
+});
