@@ -57,3 +57,70 @@ const kValue = document.getElementById("kValue");
 kRange.addEventListener("input", () => {
   kValue.textContent = kRange.value;
 });
+
+// Hàm gọi API
+async function callApi(url, body) {
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("❌ API error:", error);
+    return null;
+  }
+}
+
+// Handle Search
+searchBtn.addEventListener("click", async () => {
+  console.log("🔍 Search button clicked!");
+
+  const query = document.getElementById("queryBasic").value;   // text query
+  const k = document.getElementById("kRange").value;          // top-k
+  const ocrFilter = document.getElementById("ocrFilter").value;
+  const asrFilter = document.getElementById("asrFilter").value;
+
+  const payload = {
+    query,
+    k: parseInt(k),
+    filters: {
+      ocr: ocrFilter,
+      asr: asrFilter
+    }
+  };
+
+  const result = await callApi("http://localhost:8080/api/search", payload);
+
+  if (result && result.data) {
+    answers.innerHTML = ""; // clear cũ
+    result.data.forEach(item => {
+      const div = document.createElement("div");
+      div.classList.add("bg-white", "p-2", "rounded", "shadow");
+      div.innerText = item.title || JSON.stringify(item);
+      answers.appendChild(div);
+    });
+  }
+});
+
+// Handle Translate
+// translateBtn.addEventListener("click", async () => {
+//   console.log("🌍 Translate button clicked!");
+
+//   const query = document.getElementById("queryBasic").value;
+
+//   const payload = { text: query };
+//   const result = await callApi("http://localhost:8080/api/translate", payload);
+
+//   if (result && result.translation) {
+//     alert("Bản dịch: " + result.translation);
+//   }
+// });
