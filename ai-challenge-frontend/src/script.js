@@ -17,22 +17,22 @@ function switchSearchMode(mode) {
 
   // Reset style nút
   [TextBtn, TemporalBtn, ImageBtn].forEach(btn => {
-    btn.classList.remove("bg-blue-500", "text-white");
+    btn.classList.remove("bg-[#E5BEB5]", "text-white");
     btn.classList.add("bg-gray-300");
   });
 
   // Hiện đúng panel & active nút
   if (mode === "text") {
     TextSearch.classList.remove("hidden");
-    TextBtn.classList.add("bg-blue-500", "text-white");
+    TextBtn.classList.add("bg-[#E5BEB5]", "text-white");
     TextBtn.classList.remove("bg-gray-300");
   } else if (mode === "temporal") {
     TemporalSearch.classList.remove("hidden");
-    TemporalBtn.classList.add("bg-blue-500", "text-white");
+    TemporalBtn.classList.add("bg-[#E5BEB5]", "text-white");
     TemporalBtn.classList.remove("bg-gray-300");
   } else if (mode === "image") {
     ImageSearch.classList.remove("hidden");
-    ImageBtn.classList.add("bg-blue-500", "text-white");
+    ImageBtn.classList.add("bg-[#E5BEB5]", "text-white");
     ImageBtn.classList.remove("bg-gray-300");
   }
 }
