@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-[#bda7a0] p-4">
+    <!-- Header -->
+    <div
+      class="bg-[#896C6C] p-2 rounded-t-lg flex justify-between items-center"
+    >
+      <div class="text-lg font-bold">Web Search</div>
+      <div class="flex space-x-4">
+        <button
+          id="textSearchBtn"
+          class="bg-[#F5FAE1] text-white px-4 py-2 rounded hover:bg-gray-400"
+        >
+          Text Search
+        </button>
+        <button
+          id="temporalSearchBtn"
+          class="bg-[#F5FAE1] px-4 py-2 rounded hover:bg-gray-400"
+        >
+          Temporal Search
+        </button>
+        <button
+          id="imageSearchBtn"
+          class="bg-[#F5FAE1] px-4 py-2 rounded hover:bg-gray-400"
+        >
+          Image Search
+        </button>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="bg-[#F5FAE1] p-4 rounded-b-lg mt-2">
+      <div class="flex">
+        <!-- Left Panel -->
+        <div class="w-1/2 pr-2">
+          <!-- Text Search -->
+          <div id="TextSearch" class="bg-white p-4 mb-4 rounded">
+            <textarea
+              id="queryBasic"
+              class="w-full h-32 p-2 border border-gray-300 rounded resize-none"
+              placeholder="Enter your text query..."
+            ></textarea>
+          </div>
+
+          <!-- Temporal Search -->
+          <div id="TemporalSearch" class="bg-white p-4 mb-4 rounded hidden">
+            <textarea
+              id="queryTemporal"
+              class="w-full h-32 p-2 border border-gray-300 rounded resize-none"
+              placeholder="Enter your temporal query..."
+            ></textarea>
+          </div>
+
+          <!-- Image Search -->
+          <div id="ImageSearch" class="bg-white p-9 mb-4 rounded hidden">
+            <label class="block mb-2 font-semibold">📤 Upload Image</label>
+            <input type="file" class="mb-2" />
+            <p class="text-sm text-gray-500">Upload an image to search</p>
+          </div>
+
+          <!-- K slider -->
+          <div class="mt-0">
+            <label for="kRange" class="block font-semibold">K</label>
+            <div class="flex items-center space-x-3">
+              <span id="kValue" class="w-10 text-right">200</span>
+              <input
+                type="range"
+                id="kRange"
+                min="25"
+                max="400"
+                step="25"
+                value="200"
+                class="flex-1 accent-blue-600"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Panel -->
+        <div class="w-1/2 pl-2">
+          <div class="bg-[#EEE6CA] p-4 rounded">
+            <h2 class="text-xl font-bold mb-4">Filter Panel</h2>
+            <input
+              type="text"
+              id="ocrFilter"
+              class="w-full p-2 mb-2 border border-gray-300 rounded"
+              placeholder="OCR Filter..."
+            />
+            <input
+              type="text"
+              id="asrFilter"
+              class="w-full p-2 border border-gray-300 rounded"
+              placeholder="ASR Filter..."
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Search -->
+      <button
+        id="searchBtn"
+        class="mt-4 bg-[#CDBBB7] text-white px-4 py-3 rounded w-full hover:bg-green-300 text-lg font-bold"
+      >
+        🔎 Search
+      </button>
+
+      <!-- Answers -->
+      <div
+        id="answers"
+        class="bg-[#896C6C] p-4 mt-4 rounded grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-h-96 overflow-y-auto"
+      >
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+        <img
+          src="https://imgs.search.brave.com/N_iU9LV52mwwfzUKYzD0vVRfsXfvXvHv9nHleaPMzcI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzcyLzM3LzEz/LzM2MF9GXzQ3MjM3/MTM4NF9NSXVoS1A2/dTgwOWY5QWpYS2NO/bDlDUm5Rc3dJTFVD/cS5qcGc"
+          class="w-full h-auto rounded shadow"
+        />
+      </div>
+    </div>
+
+    <!-- Chat bubble -->
+    <button
+      id="chatBubble"
+      class="fixed z-50 bottom-5 right-5 bg-[#DAA295] text-white p-3 rounded-full shadow-lg hover:bg-[#CF8777]"
+    >
+      👻
+    </button>
+    <!-- Chat window -->
+    <div
+      id="chatWindow"
+      class="hidden fixed bottom-20 right-5 w-80 h-96 bg-white shadow-lg rounded-lg flex flex-col"
+    >
+      <!-- Header -->
+      <div
+        class="bg-[#DAA295] text-white p-3 rounded-t-lg flex justify-between items-center"
+      >
+        <span class="font-bold">Chatbot</span>
+        <button id="closeChat" class="text-white hover:text-gray-200">
+          ❌
+        </button>
+      </div>
+
+      <!-- Messages -->
+      <div
+        id="chatMessages"
+        class="flex-1 p-3 overflow-y-auto space-y-2 text-sm"
+      >
+        <div class="self-start bg-gray-200 p-2 rounded-lg max-w-[70%]">
+          👋 Loo loo
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="p-2 border-t flex space-x-2">
+        <input
+          id="chatInput"
+          type="text"
+          placeholder="Nhập tin nhắn..."
+          class="flex-1 p-2 border rounded"
+        />
+        <button id="sendBtn" class="bg-[#DAA295] text-white px-3 rounded">
+          ➤
+        </button>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
