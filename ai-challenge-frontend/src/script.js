@@ -62,12 +62,15 @@ const chatMessages = document.getElementById("chatMessages");
 
 // Mở chat
 chatBubble.addEventListener("click", () => {
-  chatWindow.classList.toggle("hidden");
+  chatBubble.classList.add("hidden");
+  chatWindow.classList.remove("hidden");
+  //chatWindow.classList.toggle("hidden");
 });
 
 // Đóng chat
 closeChat.addEventListener("click", () => {
   chatWindow.classList.add("hidden");
+  chatBubble.classList.remove("hidden");
 });
 
 // Gửi tin nhắn
