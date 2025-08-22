@@ -1,15 +1,15 @@
 /* src/App.css */
 @import 'tailwindcss';
 
+/* src/App.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Dòng code dưới đây sẽ lấy lại style nền và căn giữa nội dung 
-  cho toàn bộ trang, giống như file HTML cũ của bạn.
-*/
 @layer base {
   body {
-    @apply bg-[#bda7a0] p-4 flex justify-center items-center;
+    /* Chỉ giữ lại màu nền và font chữ, bỏ đi việc căn giữa */
+    @apply bg-[#242424] text-white font-sans;
   }
 }

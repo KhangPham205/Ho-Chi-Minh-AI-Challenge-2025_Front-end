@@ -4,12 +4,8 @@ import SearchPage from "./pages/SearchPage";
 import './App.css';
 
 function App() {
-  // Bọc SearchPage trong một container để dễ dàng căn chỉnh
-  return (
-    <div className="container mx-auto p-4">
-      <SearchPage />
-    </div>
-  );
+  // Bỏ đi các class giới hạn chiều rộng, để SearchPage tự quản lý layout
+  return <SearchPage />;
 }
 
 export default App;
