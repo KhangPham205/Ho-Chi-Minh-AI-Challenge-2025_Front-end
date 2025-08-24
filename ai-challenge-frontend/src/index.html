@@ -19,12 +19,28 @@
         >
           Text Search
         </button>
+
         <button
           id="temporalSearchBtn"
           class="bg-[#F5FAE1] px-4 py-2 rounded hover:bg-gray-400"
         >
           Temporal Search
         </button>
+
+        <button
+          id="asrSearchBtn"
+          class="bg-[#F5FAE1] px-4 py-2 rounded hover:bg-gray-400"
+        >
+          ASR Search
+        </button>
+
+        <button
+          id="ocrSearchBtn"
+          class="bg-[#F5FAE1] px-4 py-2 rounded hover:bg-gray-400"
+        >
+          OCR Search
+        </button>
+
         <button
           id="imageSearchBtn"
           class="bg-[#F5FAE1] px-4 py-2 rounded hover:bg-gray-400"
@@ -36,7 +52,8 @@
 
     <!-- Main -->
     <div class="bg-[#F5FAE1] p-4 rounded-b-lg mt-2">
-      <div class="flex">
+      <!-- Layout mặc định (Text, ASR, OCR, Image + Filter) -->
+      <div id="NormalLayout" class="flex">
         <!-- Left Panel -->
         <div class="w-1/2 pr-2">
           <!-- Text Search -->
@@ -48,12 +65,21 @@
             ></textarea>
           </div>
 
-          <!-- Temporal Search -->
-          <div id="TemporalSearch" class="bg-white p-4 mb-4 rounded hidden">
+          <!-- ASR Search -->
+          <div id="AsrSearch" class="bg-white p-4 mb-4 rounded hidden">
             <textarea
-              id="queryTemporal"
+              id="queryAsr"
               class="w-full h-32 p-2 border border-gray-300 rounded resize-none"
-              placeholder="Enter your temporal query..."
+              placeholder="Enter your ASR query..."
+            ></textarea>
+          </div>
+
+          <!-- OCR Search -->
+          <div id="OcrSearch" class="bg-white p-4 mb-4 rounded hidden">
+            <textarea
+              id="queryOcr"
+              class="w-full h-32 p-2 border border-gray-300 rounded resize-none"
+              placeholder="Enter your OCR query..."
             ></textarea>
           </div>
 
@@ -65,7 +91,7 @@
           </div>
 
           <!-- K slider -->
-          <div class="mt-0">
+          <div id="KSlider" class="mt-0">
             <label for="kRange" class="block font-semibold">K</label>
             <div class="flex items-center space-x-3">
               <span id="kValue" class="w-10 text-right">200</span>
@@ -83,7 +109,7 @@
         </div>
 
         <!-- Filter Panel -->
-        <div class="w-1/2 pl-2">
+        <div id="FilterPanel" class="w-1/2 pl-2">
           <div class="bg-[#EEE6CA] p-4 rounded">
             <h2 class="text-xl font-bold mb-4">Filter Panel</h2>
             <input
@@ -102,6 +128,63 @@
         </div>
       </div>
 
+      <!-- Temporal Search (full width) -->
+      <div id="TemporalSearch" class="bg-white p-6 mb-4 rounded hidden">
+        <h2 class="text-lg font-bold mb-4">Temporal Search</h2>
+        <div class="grid grid-cols-3 gap-3">
+          <!-- Hàng 1: Scene -->
+          <input
+            type="text"
+            placeholder="Scene 1"
+            class="p-2 border border-gray-300 rounded"
+          />
+          <input
+            type="text"
+            placeholder="Scene 2"
+            class="p-2 border border-gray-300 rounded"
+          />
+          <input
+            type="text"
+            placeholder="Scene 3"
+            class="p-2 border border-gray-300 rounded"
+          />
+
+          <!-- Hàng 2: OCR -->
+          <input
+            type="text"
+            placeholder="OCR 1"
+            class="p-2 border border-gray-300 rounded"
+          />
+          <input
+            type="text"
+            placeholder="OCR 2"
+            class="p-2 border border-gray-300 rounded"
+          />
+          <input
+            type="text"
+            placeholder="OCR 3"
+            class="p-2 border border-gray-300 rounded"
+          />
+
+          <!-- Hàng 3: ASR -->
+          <input
+            type="text"
+            placeholder="ASR 1"
+            class="p-2 border border-gray-300 rounded"
+          />
+          <input
+            type="text"
+            placeholder="ASR 2"
+            class="p-2 border border-gray-300 rounded"
+          />
+          <input
+            type="text"
+            placeholder="ASR 3"
+            class="p-2 border border-gray-300 rounded"
+          />
+        </div>
+      </div>
+
       <!-- Search -->
       <button
         id="searchBtn"
@@ -116,6 +199,7 @@
         class="bg-[#896C6C] p-4 mt-4 rounded grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-h-96 overflow-y-auto"
       ></div>
     </div>
+
     <!-- Popup video -->
     <div
       id="videoPopup"
