@@ -20,29 +20,32 @@ const answerData = [
 const container = document.getElementById("answerData");
 
 // Render tất cả answer
-answerData.forEach((item) => {
+answerData.forEach((item, index) => {
   const div = document.createElement("div");
+
   div.className = "relative rounded shadow overflow-hidden group";
+  div.style.backgroundColor = "#fff"; // nền thumbnail nếu muốn
 
   div.innerHTML = `
     <!-- overlay top -->
-    <div class="absolute top-0 left-0 right-0 flex justify-between text-xs text-white 
+    <div class="absolute top-0 left-0 right-0 text-xs text-white 
                 bg-black bg-opacity-50 px-2 py-1 opacity-30 group-hover:opacity-100 transition-opacity duration-300">
-      <span>${item.video}</span>
-      <span>${item.frame}</span>
+      ${item.video}, ${item.frame}
     </div>
 
     <!-- thumbnail -->
     <img src="${item.img}" class="w-full h-auto cursor-pointer" onclick="openVideo('${item.url_video}', ${item.timestamp_ms})" />
 
-    <!-- icons -->
+    <!-- nút trái -->
     <div class="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
       <button onclick="openVideo('${item.url_video}', ${item.timestamp_ms})" 
-              class="bg-black bg-opacity-60 text-white p-2 rounded-full text-xs">🔎</button>
+              class="text-white p-2 rounded-full text-xs" style="background-color:#F98A8A;">🔎</button>
     </div>
+
+    <!-- nút phải -->
     <div class="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
       <button onclick="viewFrame('${item.img}')" 
-              class="bg-black bg-opacity-60 text-white p-2 rounded-full text-xs">🔍</button>
+              class="text-white p-2 rounded-full text-xs" style="background-color:#74B1FB;">🔍</button>
     </div>
   `;
 
