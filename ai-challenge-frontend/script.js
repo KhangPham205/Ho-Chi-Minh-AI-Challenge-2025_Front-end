@@ -1,45 +1,65 @@
 const TextBtn = document.getElementById("textSearchBtn");
 const TemporalBtn = document.getElementById("temporalSearchBtn");
+const AsrBtn = document.getElementById("asrSearchBtn");
+const OcrBtn = document.getElementById("ocrSearchBtn");
 const ImageBtn = document.getElementById("imageSearchBtn");
 
 const TextSearch = document.getElementById("TextSearch");
 const TemporalSearch = document.getElementById("TemporalSearch");
+// Giả sử bạn có thêm div cho ASR và OCR (giống TextSearch)
+const AsrSearch = document.getElementById("AsrSearch");
+const OcrSearch = document.getElementById("OcrSearch");
 const ImageSearch = document.getElementById("ImageSearch");
-
-const searchBtn = document.getElementById("searchBtn");
-const answers = document.getElementById("answers");
+const FilterPanel = document.getElementById("FilterPanel");
+const KSlider = document.getElementById("KSlider");
 
 function switchSearchMode(mode) {
   // Ẩn tất cả panel
-  TextSearch.classList.add("hidden");
-  TemporalSearch.classList.add("hidden");
-  ImageSearch.classList.add("hidden");
+  [TextSearch, TemporalSearch, AsrSearch, OcrSearch, ImageSearch].forEach(
+    (el) => {
+      if (el) el.classList.add("hidden");
+    }
+  );
 
   // Reset style nút
-  [TextBtn, TemporalBtn, ImageBtn].forEach((btn) => {
+  [TextBtn, TemporalBtn, AsrBtn, OcrBtn, ImageBtn].forEach((btn) => {
     btn.classList.remove("bg-[#E5BEB5]", "text-white");
-    btn.classList.add("bg-gray-300");
+    btn.classList.add("bg-[#F5FAE1]", "text-black");
   });
 
-  // Hiện đúng panel & active nút
+  // Ẩn FilterPanel nếu đang ở temporal
+  if (mode === "temporal") {
+    FilterPanel.classList.add("hidden");
+    KSlider.classList.add("hidden");
+  } else {
+    FilterPanel.classList.remove("hidden");
+    KSlider.classList.remove("hidden");
+  }
+
+  // Kích hoạt đúng panel & style cho nút
   if (mode === "text") {
     TextSearch.classList.remove("hidden");
     TextBtn.classList.add("bg-[#E5BEB5]", "text-white");
-    TextBtn.classList.remove("bg-gray-300");
   } else if (mode === "temporal") {
     TemporalSearch.classList.remove("hidden");
     TemporalBtn.classList.add("bg-[#E5BEB5]", "text-white");
-    TemporalBtn.classList.remove("bg-gray-300");
+  } else if (mode === "asr") {
+    AsrSearch.classList.remove("hidden");
+    AsrBtn.classList.add("bg-[#E5BEB5]", "text-white");
+  } else if (mode === "ocr") {
+    OcrSearch.classList.remove("hidden");
+    OcrBtn.classList.add("bg-[#E5BEB5]", "text-white");
   } else if (mode === "image") {
     ImageSearch.classList.remove("hidden");
     ImageBtn.classList.add("bg-[#E5BEB5]", "text-white");
-    ImageBtn.classList.remove("bg-gray-300");
   }
 }
 
 // Event listener
 TextBtn.addEventListener("click", () => switchSearchMode("text"));
 TemporalBtn.addEventListener("click", () => switchSearchMode("temporal"));
+AsrBtn.addEventListener("click", () => switchSearchMode("asr"));
+OcrBtn.addEventListener("click", () => switchSearchMode("ocr"));
 ImageBtn.addEventListener("click", () => switchSearchMode("image"));
 
 // Mặc định mở TextSearch
@@ -53,137 +73,9 @@ kRange.addEventListener("input", () => {
   kValue.textContent = kRange.value;
 });
 
-// Hàm gọi API
-async function callApi(url, body) {
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("❌ API error:", error);
-    return null;
-  }
-}
-
-// Handle Search
-searchBtn.addEventListener("click", async () => {
-  console.log("🔍 Search button clicked!");
-
-  const query = document.getElementById("queryBasic").value;   // text query
-  const k = document.getElementById("kRange").value;          // top-k
-  const ocrFilter = document.getElementById("ocrFilter").value;
-  const asrFilter = document.getElementById("asrFilter").value;
-
-  const payload = {
-    query,
-    k: parseInt(k),
-    filters: {
-      ocr: ocrFilter,
-      asr: asrFilter
-    }
-  };
-
-  const result = await callApi("http://localhost:8080/api/search", payload);
-
-  if (result && result.data) {
-    answers.innerHTML = ""; // clear cũ
-    result.data.forEach(item => {
-      const div = document.createElement("div");
-      div.classList.add("bg-white", "p-2", "rounded", "shadow");
-      div.innerText = item.title || JSON.stringify(item);
-      answers.appendChild(div);
-    });
-  }
-});
-
-// Handle Translate
-// translateBtn.addEventListener("click", async () => {
-//   console.log("🌍 Translate button clicked!");
-
-//   const query = document.getElementById("queryBasic").value;
-
-//   const payload = { text: query };
-//   const result = await callApi("http://localhost:8080/api/translate", payload);
-
-//   if (result && result.translation) {
-//     alert("Bản dịch: " + result.translation);
-//   }
-// });
-
 const chatBubble = document.getElementById("chatBubble");
 const chatWindow = document.getElementById("chatWindow");
 const closeChat = document.getElementById("closeChat");
 const sendBtn = document.getElementById("sendBtn");
 const chatInput = document.getElementById("chatInput");
 const chatMessages = document.getElementById("chatMessages");
-
-// Mở chat
-chatBubble.addEventListener("click", () => {
-  chatBubble.classList.add("hidden");
-  chatWindow.classList.remove("hidden");
-  //chatWindow.classList.toggle("hidden");
-});
-
-// Đóng chat
-closeChat.addEventListener("click", () => {
-  chatWindow.classList.add("hidden");
-  chatBubble.classList.remove("hidden");
-});
-
-// Gửi tin nhắn
-sendBtn.addEventListener("click", sendMessage);
-chatInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") sendMessage();
-});
-
-function sendMessage() {
-  const msg = chatInput.value.trim();
-  if (!msg) return;
-
-  // Hiện tin nhắn người dùng
-  const userMsg = document.createElement("div");
-  userMsg.className =
-    "self-end bg-[#E5BEB5] text-black p-2 rounded-lg max-w-[70%]";
-  userMsg.textContent = msg;
-  chatMessages.appendChild(userMsg);
-
-  chatInput.value = "";
-
-  // Giả lập phản hồi bot
-  setTimeout(() => {
-    const botMsg = document.createElement("div");
-    botMsg.className = "self-start bg-gray-200 p-2 rounded-lg max-w-[70%]";
-    botMsg.textContent = "🤖" + msg;
-    s;
-    chatMessages.appendChild(botMsg);
-
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }, 600);
-}
-
-// Kéo thả chat window
-let isDragging = false;
-let offsetX, offsetY;
-chatWindow.addEventListener("mousedown", (e) => {
-  isDragging = true;
-  offsetX = e.clientX - chatWindow.getBoundingClientRect().left;
-  offsetY = e.clientY - chatWindow.getBoundingClientRect().top;
-});
-document.addEventListener("mousemove", (e) => {
-  if (!isDragging) return;
-  chatWindow.style.left = `${e.clientX - offsetX}px`;
-  chatWindow.style.top = `${e.clientY - offsetY}px`;
-});
-document.addEventListener("mouseup", () => {
-  isDragging = false;
-});
