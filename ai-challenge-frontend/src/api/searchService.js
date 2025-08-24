@@ -1,44 +1,39 @@
 // src/api/searchService.js
 import apiClient from "./apiClient";
-import { SearchQuery, SearchResult } from "../models/SearchModels";
+import { SearchResult } from "../models/SearchModels";
 
-// search API
-export const searchApi = async (payload) => {
-  try {
-    const response = await apiClient.post("/search", payload);
-    return response.data;
-  } catch (err) {
-    console.error("Search API error:", err);
-    throw err;
-  }
-};
-
-
-// Search theo text
-export async function searchText(queryText, k = 50) {
-  const query = new SearchQuery({ mode: "text", text: queryText, k });
-  const res = await apiClient.post("/search/text", query);
-
-  return res.data.results.map(r => new SearchResult(r));
+/**
+ * Gửi yêu cầu tìm kiếm bằng văn bản.
+ * @param {string} query - Chuỗi văn bản tìm kiếm.
+ * @param {number} k - Số lượng kết quả.
+ * @param {string} model - Tên model.
+ * @returns {Promise<SearchResult[]>}
+ */
+export async function searchText(query, k, model) {
+  const params = { query, top_k: k, model };
+  const response = await apiClient.post("/search_text", null, { params });
+  
+  // Ánh xạ kết quả trả về thành các đối tượng SearchResult
+  return response.data.results.map(r => new SearchResult(r));
 }
 
-// Search theo temporal
-export async function searchTemporal(queryTemporal, k = 50) {
-  const query = new SearchQuery({ mode: "temporal", temporal: queryTemporal, k });
-  const res = await apiClient.post("/search/temporal", query);
-
-  return res.data.results.map(r => new SearchResult(r));
-}
-
-// Search theo image
-export async function searchImage(imageFile, k = 50) {
+/**
+ * Gửi yêu cầu tìm kiếm bằng hình ảnh.
+ * @param {File} imageFile - File hình ảnh.
+ * @param {number} k - Số lượng kết quả.
+ * @param {string} model - Tên model.
+ * @returns {Promise<SearchResult[]>}
+ */
+export async function searchImage(imageFile, k, model) {
   const formData = new FormData();
   formData.append("image", imageFile);
-  formData.append("k", k);
 
-  const res = await apiClient.post("/search/image", formData, {
+  const params = { top_k: k, model };
+  
+  const response = await apiClient.post("/search_image", formData, {
+    params,
     headers: { "Content-Type": "multipart/form-data" },
   });
 
-  return res.data.results.map(r => new SearchResult(r));
+  return response.data.results.map(r => new SearchResult(r));
 }

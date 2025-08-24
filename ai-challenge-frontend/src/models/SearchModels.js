@@ -1,10 +1,13 @@
 // Dữ liệu backend trả về cho một kết quả
 export class SearchResult {
-  constructor({ id, title, thumbnailUrl, score }) {
+  constructor({ id, score, frame_name, video_name, timestamp_ms, frame_url, video_url }) {
     this.id = id;
-    this.title = title;
-    this.thumbnailUrl = thumbnailUrl;
     this.score = score;
+    this.frame_name = frame_name;
+    this.video_name = video_name;
+    this.timestamp_ms = timestamp_ms;
+    this.frame_url = frame_url;
+    this.video_url = video_url;
   }
 }
 
