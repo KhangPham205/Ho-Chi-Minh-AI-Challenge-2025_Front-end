@@ -8,6 +8,8 @@ import VideoPlayerModal from '../components/VideoPlayerModal';
 import AsrResultGroup from "../components/AsrResultGroup";
 import TemporalResultGroup from "../components/TemporalResultGroup";
 
+import myLogo from '../assets/logo.png';
+
 // Component con cho giao diện nhập liệu Temporal
 const TemporalInput = ({ temporalData, setTemporalData }) => {
   const handleInputChange = (e, index, field) => {
@@ -26,7 +28,7 @@ function SearchPage() {
 
   // --- UI State Management ---
   const [mode, setMode] = useState("text");
-  const [k, setK] = useState(25);
+  const [k, setK] = useState(20);
   const [textQuery, setTextQuery] = useState("");
   const [ocrQuery, setOcrQuery] = useState("");
   const [asrQuery, setAsrQuery] = useState("");
@@ -99,7 +101,10 @@ function SearchPage() {
   return (
     <div className="flex h-screen bg-[#242424] text-white">
       <aside className="w-[400px] h-full flex flex-col bg-gray-800 p-4 space-y-4 overflow-y-auto">
-        <div className="text-xl font-bold">Web Search</div>
+        <div className="flex items-center space-x-3 mb-4 p-2 bg-black rounded-lg">
+          <img src={myLogo} alt="App Logo" className="w-auto h-10" />
+          <div className="text-xl font-bold">Web Search</div>
+        </div>
 
         {/* Mode Buttons */}
         <div className="grid grid-cols-3 gap-1 bg-gray-900 p-1 rounded-lg">
@@ -140,7 +145,7 @@ function SearchPage() {
           </div>
         )}
         
-        {/* Filter Panel và K Slider */}
+        {/* Filter Panel */}
         {mode !== 'temporal' && mode !== 'ocr' && mode !== 'asr' && (
             <>
               <div className="bg-gray-900 p-3 rounded-lg space-y-3">
@@ -151,15 +156,17 @@ function SearchPage() {
             </>
         )}
 
+        {/* K Slider */}
         {mode !== 'temporal' && (
             <>
               <div className="bg-gray-900 p-3 rounded-lg">
                   <label htmlFor="kRange" className="block font-semibold">Top K: <span className="text-blue-400">{k}</span></label>
-                  <input type="range" id="kRange" min="25" max="400" step="25" value={k} onChange={(e) => setK(Number(e.target.value))} className="w-full mt-2 accent-blue-500" />
+                  <input type="range" id="kRange" min="10" max="200" step="10" value={k} onChange={(e) => setK(Number(e.target.value))} className="w-full mt-2 accent-blue-500" />
               </div>
             </>
         )}
 
+        {/* Search - Button */}
         <div className="flex-grow"></div>
         <div className="space-y-3">
           <button onClick={handleSearch} className="w-full bg-green-600 text-white py-3 rounded hover:bg-green-700 font-bold disabled:bg-gray-500" disabled={isLoading}>
@@ -168,21 +175,28 @@ function SearchPage() {
         </div>
       </aside>
 
-       <main className="flex-1 h-full p-4 overflow-y-auto">
-        {isLoading && (<p className="text-center text-gray-400">Loading...</p>)}
+      <main className="flex-1 h-full p-4 overflow-y-auto">
+        {isLoading && (<p className="text-center text-gray-400">Đang tìm kiếm...</p>)}
         {!isLoading && error && (<p className="text-center text-red-400">{error}</p>)}
 
-        {results.length > 0 && (
+        {/* Logic hiển thị kết quả */}
+        {!isLoading && !error && results.length > 0 && (
           resultType === 'grouped' ? <div>{results.map(group => <AsrResultGroup key={group.video_name} videoGroup={group} onVideoClick={setSelectedVideo} onImageClick={openImageInNewTab} />)}</div> :
           resultType === 'temporal' ? <div>{results.map(group => <TemporalResultGroup key={group.video_name} videoGroup={group} onVideoClick={setSelectedVideo} onImageClick={openImageInNewTab} />)}</div> :
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">{results.filter(r => r.frame_url).map(r => <ResultItem key={r.id} result={r} onVideoClick={setSelectedVideo} onImageClick={openImageInNewTab} />)}</div>
+        )}
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
-          {results.filter(r => r.frame_url).map(r => (
-            <ResultItem key={r.id} result={r} onVideoClick={setSelectedVideo} onImageClick={openImageInNewTab} />
-        ))}
-        </div>
-      )}
-       </main>
+        {/* Logic hiển thị Logo khi không có kết quả */}
+        {!isLoading && !error && results.length === 0 && (
+          <div className="flex items-center justify-center h-full">
+            <img 
+              src={myLogo} 
+              alt="Logo" 
+              className="w-auto h-auto opacity-20" // Tăng/giảm opacity để logo mờ hoặc rõ
+            />
+          </div>
+        )}
+      </main>
       
       {selectedVideo && <VideoPlayerModal videoData={selectedVideo} onClose={() => setSelectedVideo(null)} />}
       
