@@ -73,7 +73,7 @@ Nếu bạn muốn phát triển và xem các thay đổi ngay lập tức mà k
 ```bash
 npm install
 ```
-#### 2. Chỉnh sửa file ```.env.development``` (Tùy chọn):
+#### 2. Chỉnh sửa file ```.env.development``` (Tùy chọn, có thể không cần thiết):
 Tạo một file tên là ```.env.development``` ở thư mục gốc để định nghĩa địa chỉ API.
 ```bash
 VITE_API_BASE_URL=http://localhost:8000
