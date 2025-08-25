@@ -89,19 +89,35 @@ npm run dev
 
 ## Cấu trúc thư mục
 ```
-/
-├── public/              # Chứa các tài sản tĩnh (favicon,...)
+ai-challenge-frontend/
+├── public/               # Chứa các file tĩnh (favicon, logo).
 ├── src/
-│   ├── components/      # Các component React tái sử dụng
-│   ├── pages/           # Các trang chính của ứng dụng (ví dụ: SearchPage.jsx)
-│   ├── App.css          # File CSS toàn cục (chứa setup Tailwind)
-│   ├── App.jsx          # Component gốc của ứng dụng
-│   └── main.jsx         # Điểm vào của ứng dụng React
-├── .dockerignore        # Các file/thư mục Docker sẽ bỏ qua
-├── docker-compose.yml   # Định nghĩa service frontend cho Docker
-├── Dockerfile           # Công thức để build Docker image cho frontend
-├── package.json         # Quản lý dependencies và scripts
-└── README.md            # Chính là file này
+│   ├── api/              # (Đề xuất) Chứa logic gọi API.
+│   │   ├── apiClient.js
+│   │   └── searchService.js
+│   ├── assets/           # Chứa tài sản như hình ảnh, SVG.
+│   │   └── react.svg
+│   ├── components/       # Chứa các component con có thể tái sử dụng.
+│   │   ├── AsrResultGroup.jsx
+│   │   ├── ResultItem.jsx
+│   │   ├── TemporalResultGroup.jsx
+│   │   └── VideoPlayerModal.jsx
+│   ├── hooks/            # Chứa các custom hook (logic tách biệt).
+│   │   └── useSearch.js
+│   ├── models/           # Chứa các model hoặc cấu trúc dữ liệu phía frontend.
+│   │   └── SearchModels.js
+│   ├── pages/            # Chứa các component chính của từng trang.
+│   │   └── SearchPage.jsx
+│   ├── utils/            # Chứa các hàm tiện ích.
+│   ├── App.jsx           # Component gốc của ứng dụng.
+│   ├── App.css
+│   └── main.jsx          # Điểm khởi đầu của ứng dụng React.
+├── .gitignore            # Cấu hình bỏ qua các file không cần thiết.
+├── docker-compose.yml    # Cấu hình Docker.
+├── Dockerfile            # Cấu hình docker
+├── index.html            # File HTML gốc.
+├── package.json          # Quản lý các thư viện và script của Node.js.
+└── vite.config.js        # File cấu hình cho Vite.
 ```
 ## 🔖Acknowledgements
 Dự án này được thực hiện trong khuôn khổ cuộc thi **Ho Chi Minh AI Challenge 2025**. Xin gửi lời cảm ơn chân thành đến Ban tổ chức đã tạo ra một môi trường học hỏi và thi đấu đầy thử thách.
