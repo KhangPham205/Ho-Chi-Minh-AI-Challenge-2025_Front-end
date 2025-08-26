@@ -46,7 +46,7 @@ export function useSearch() {
     try {
       let response;
       const { mode, query, imageFile, k, model, temporalData, ocrFilter, asrFilter } = searchParams;
-      const baseParams = { query, top_k: k, model, ocr_filter: ocrFilter, asr_filter: asrFilter };
+      const baseParams = { query, top_k: k, model, ocr_keywords: ocrFilter, asr_keywords: asrFilter };
 
       if (mode === 'text' || mode === 'ocr') {
         const endpoint = mode === 'text' ? '/search_text' : '/search_ocr';

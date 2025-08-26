@@ -1,6 +1,9 @@
 // src/pages/SearchPage.jsx
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useSearch } from "../hooks/useSearch";
+import Lightbox from "yet-another-react-lightbox";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import "yet-another-react-lightbox/styles.css";
 
 // Import các component con
 import ResultItem from '../components/ResultItem';
@@ -8,7 +11,8 @@ import VideoPlayerModal from '../components/VideoPlayerModal';
 import AsrResultGroup from "../components/AsrResultGroup";
 import TemporalResultGroup from "../components/TemporalResultGroup";
 
-import myLogo from '../assets/logo.png';
+import logo from '../assets/logo.png';
+import background_logo from '../assets/background_logo.png';
 
 // Component con cho giao diện nhập liệu Temporal
 const TemporalInput = ({ temporalData, setTemporalData }) => {
@@ -28,7 +32,7 @@ function SearchPage() {
 
   // --- UI State Management ---
   const [mode, setMode] = useState("text");
-  const [k, setK] = useState(20);
+  const [k, setK] = useState(25);
   const [textQuery, setTextQuery] = useState("");
   const [ocrQuery, setOcrQuery] = useState("");
   const [asrQuery, setAsrQuery] = useState("");
@@ -37,12 +41,23 @@ function SearchPage() {
   const [asrFilter, setAsrFilter] = useState("");
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [selectedModel, setSelectedModel] = useState('beit3');
+  const [zoomImageUrl, setZoomImageUrl] = useState(null);
   
   const [temporalData, setTemporalData] = useState({
     events: [{ query: "", ocr: "", asr: "" },{ query: "", ocr: "", asr: "" },{ query: "", ocr: "", asr: "" },],
     model: 'beit3',
     topk_per_event: 200,
   });
+
+  // --- State quản lý Lightbox ---
+  const [openLightbox, setOpenLightbox] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // --- Hàm mở Lightbox ---
+  const openImageViewer = useCallback((index) => {
+    setCurrentImageIndex(index);
+    setOpenLightbox(true);
+  }, []);
   
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatInput, setChatInput] = useState("");
@@ -88,8 +103,8 @@ function SearchPage() {
     executeSearch(searchParams);
   };
 
-  const openImageInNewTab = (imageUrl) => {
-    window.open(imageUrl, '_blank', 'noopener,noreferrer');
+  const handleImageZoom = (imageUrl) => {
+    setZoomImageUrl(imageUrl);
   };
 
   const handleSendMessage = () => { /* ... */ };
@@ -101,9 +116,8 @@ function SearchPage() {
   return (
     <div className="flex h-screen bg-[#242424] text-white">
       <aside className="w-[400px] h-full flex flex-col bg-gray-800 p-4 space-y-4 overflow-y-auto">
-        <div className="flex items-center space-x-3 mb-4 p-2 bg-black rounded-lg">
-          <img src={myLogo} alt="App Logo" className="w-auto h-10" />
-          <div className="text-xl font-bold">Web Search</div>
+        <div className="flex justify-center items-center mb-4 p-2 bg-black rounded-lg">
+          <img src={logo} alt="App Logo" className="w-auto h-10" />
         </div>
 
         {/* Mode Buttons */}
@@ -161,7 +175,7 @@ function SearchPage() {
             <>
               <div className="bg-gray-900 p-3 rounded-lg">
                   <label htmlFor="kRange" className="block font-semibold">Top K: <span className="text-blue-400">{k}</span></label>
-                  <input type="range" id="kRange" min="10" max="200" step="10" value={k} onChange={(e) => setK(Number(e.target.value))} className="w-full mt-2 accent-blue-500" />
+                  <input type="range" id="kRange" min="25" max="200" step="25" value={k} onChange={(e) => setK(Number(e.target.value))} className="w-full mt-2 accent-blue-500" />
               </div>
             </>
         )}
@@ -181,16 +195,25 @@ function SearchPage() {
 
         {/* Logic hiển thị kết quả */}
         {!isLoading && !error && results.length > 0 && (
-          resultType === 'grouped' ? <div>{results.map(group => <AsrResultGroup key={group.video_name} videoGroup={group} onVideoClick={setSelectedVideo} onImageClick={openImageInNewTab} />)}</div> :
-          resultType === 'temporal' ? <div>{results.map(group => <TemporalResultGroup key={group.video_name} videoGroup={group} onVideoClick={setSelectedVideo} onImageClick={openImageInNewTab} />)}</div> :
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">{results.filter(r => r.frame_url).map(r => <ResultItem key={r.id} result={r} onVideoClick={setSelectedVideo} onImageClick={openImageInNewTab} />)}</div>
+          resultType === 'grouped' ? <div>{results.map(group => <AsrResultGroup key={group.video_name} videoGroup={group} onVideoClick={setSelectedVideo} onImageClick={openImageViewer} />)}</div> :
+          resultType === 'temporal' ? <div>{results.map(group => <TemporalResultGroup key={group.video_name} videoGroup={group} onVideoClick={setSelectedVideo} onImageClick={openImageViewer} />)}</div> :
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+            {results.filter(r => r.frame_url).map((r, index) => (
+              <ResultItem 
+                key={r.id} 
+                result={r} 
+                onVideoClick={setSelectedVideo} 
+                onImageClick={() => openImageViewer(index)} // Truyền index vào hàm mở
+              />
+            ))}
+          </div>
         )}
 
         {/* Logic hiển thị Logo khi không có kết quả */}
         {!isLoading && !error && results.length === 0 && (
           <div className="flex items-center justify-center h-full">
             <img 
-              src={myLogo} 
+              src={background_logo} 
               alt="Logo" 
               className="w-auto h-auto opacity-20" // Tăng/giảm opacity để logo mờ hoặc rõ
             />
@@ -199,7 +222,25 @@ function SearchPage() {
       </main>
       
       {selectedVideo && <VideoPlayerModal videoData={selectedVideo} onClose={() => setSelectedVideo(null)} />}
-      
+
+      {/* --- THAY ĐỔI: Render component Lightbox mới --- */}
+      <Lightbox
+        open={openLightbox}
+        close={() => setOpenLightbox(false)}
+        slides={results.filter(r => r.frame_url).map(r => ({ src: r.frame_url }))}
+        index={currentImageIndex}
+        plugins={[Zoom]} // Kích hoạt plugin Zoom
+        zoom={{
+          // Tùy chỉnh mức độ zoom
+          maxZoomPixelRatio: 5,
+          zoomInMultiplier: 1.4,
+          doubleTapDelay: 300,
+          doubleClickDelay: 300,
+          doubleClickMaxStops: 2,
+          keyboardMoveDistance: 50,
+        }}
+      />
+
       {/* Chatbot UI */}
       <button onClick={() => setIsChatOpen(true)} className="fixed z-50 bottom-5 right-5 bg-[#DAA295] text-white p-3 rounded-full shadow-lg hover:bg-[#CF8777] text-2xl">👻</button>
       {isChatOpen && (
@@ -223,6 +264,23 @@ function SearchPage() {
           </div>
         </div>
       )}
+
+    {zoomImageUrl && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80" onClick={() => setZoomImageUrl(null)}>
+        <img
+          src={zoomImageUrl}
+          alt="Zoom"
+          className="max-w-[90vw] max-h-[90vh] rounded shadow-lg"
+          onClick={e => e.stopPropagation()}
+        />
+        <button
+          className="absolute top-5 right-5 text-white text-3xl font-bold"
+          onClick={() => setZoomImageUrl(null)}
+        >
+          ×
+        </button>
+      </div>
+    )}
     </div>
   );
 }

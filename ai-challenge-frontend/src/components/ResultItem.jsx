@@ -23,7 +23,7 @@ function ResultItem({ result, onVideoClick, onImageClick }) {
 
   const handleImageIconClick = (e) => {
     e.stopPropagation();
-    onImageClick(result.frame_url);
+    onImageClick();
   };
 
   return (
